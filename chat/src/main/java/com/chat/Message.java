@@ -1,12 +1,15 @@
 package com.chat;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Message implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
 	private int Id;
 	private String Message;
+    private String Nome;
+    private Date Data;
 	private MessageType type;
 	
 	public int getId() {
@@ -26,6 +29,22 @@ public class Message implements Serializable {
 	}
 	public void setType(MessageType type) {
 		this.type = type;
+	}
+
+	public String getNome() {
+		return Nome;
+	}
+
+	public void setNome(String nome) {
+		Nome = nome;
+	}
+
+	public Date getData() {
+		return Data;
+	}
+
+	public void setData(Date data) {
+		Data = data;
 	}
 
 	public static enum MessageType {
