@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.oluis.chatapp.Activity.MainActivity"
-    android:weightSum="1">
-
+    android:weightSum="1"
+    tools:context="com.example.oluis.chatapp.Activity.MainActivity">
 
     <TableRow
+        android:id="@+id/tableRowStatus"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="30dp">
 
         <TextView
             android:id="@+id/txtStatus"
@@ -20,18 +20,29 @@
             android:textSize="24sp" />
     </TableRow>
 
-    <ListView
-        android:id="@+id/listChat"
-        android:layout_width="match_parent"
-        android:layout_height="51dp"
-        android:layout_weight="0.95"></ListView>
+    <TableRow
+        android:id="@+id/tableRowList"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tableRowMsg"
+        android:layout_below="@id/tableRowStatus">
+
+        <ListView
+            android:id="@+id/listChat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></ListView>
+    </TableRow>
 
     <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:id="@+id/tableRowMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <EditText
@@ -39,18 +50,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:layout_toLeftOf="@+id/btnEnviar"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
             <Button
                 android:id="@+id/btnEnviar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/txtMensagem"
+                android:onClick="btnSendOnClick"
                 android:text="Enviar"
-                android:onClick="btnSendOnClick"/>
-
+                android:layout_alignBaseline="@+id/txtMensagem"
+                android:layout_alignBottom="@+id/txtMensagem"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
         </RelativeLayout>
 
     </TableRow>
 
-</TableLayout>
+</RelativeLayout>

@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.oluis.chatapp.R;
 
@@ -25,10 +26,20 @@ public class ConnectActivity extends AppCompatActivity {
         txtIp = (EditText) findViewById(R.id.txtIp);
         txtPort = (EditText) findViewById(R.id.txtPort);
 
-        i.putExtra("IP", txtPort.getText());
-        i.putExtra("PORT", txtPort.getText());
+        if((txtIp.getText().length() != 0)){
+            if((txtPort.getText().length() != 0)){
+                i.putExtra("IP", txtIp.getText());
+                i.putExtra("PORT", txtPort.getText());
 
-        startActivity(i);
-        finish();
+                startActivity(i);
+                finish();
+            }
+            else {
+                Toast.makeText(this, "Informe uma porta válida!", Toast.LENGTH_LONG).show();
+            }
+        }
+        else{
+            Toast.makeText(this, "Informe um endereço de IP válido!", Toast.LENGTH_LONG).show();
+        }
     }
 }
