@@ -11,6 +11,7 @@ public class Message implements Serializable {
     private String Nome;
     private Date Data;
 	private MessageType type;
+	private boolean IsSync;
 	
 	public int getId() {
 		return Id;
@@ -47,9 +48,20 @@ public class Message implements Serializable {
 		Data = data;
 	}
 
+	public boolean isSync() {
+		return IsSync;
+	}
+
+	public void setSync(boolean sync) {
+		IsSync = sync;
+	}
+
 	public static enum MessageType {
-        GeneratedId (1),
-        Message (2);
+		GeneratedId (1),
+		Message (2),
+		Photo(3),
+		Video(4),
+		Sync(5);
 
         private final int valor;
         MessageType(int tipo){

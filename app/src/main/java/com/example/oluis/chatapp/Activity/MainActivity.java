@@ -2,12 +2,8 @@ package com.example.oluis.chatapp.Activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,16 +17,15 @@ import android.widget.Toast;
 
 import com.chat.Message;
 import com.example.oluis.chatapp.Adapter.ChatAdapter;
+import com.example.oluis.chatapp.Data.MensagemOperations;
 import com.example.oluis.chatapp.R;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,11 +36,13 @@ public class MainActivity extends AppCompatActivity {
     private List<Message> listMessage;
     private String IP;
     private int PORT;
+    public String LOGIN;
     public int Id;
     private Socket socket;
     static ObjectInputStream in;
     static ObjectOutputStream out;
 
+    private MensagemOperations msgOperations;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 1;
     String mCurrentPhotoPath;
@@ -62,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         Intent connectionIntent = getIntent();
         Bundle b = getIntent().getExtras();
 
+        LOGIN = b.get("LOGIN").toString();
+
         /*if (b == null) {
             Intent i = new Intent(this, ConnectActivity.class);
             startActivity(i);
@@ -72,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
         }*/
         listMessage = new ArrayList<Message>();
+
+        msgOperations = new MensagemOperations(this);
+        msgOperations.open();
 
         Connect();
     }
@@ -91,12 +93,15 @@ public class MainActivity extends AppCompatActivity {
                 Message message = new Message();
 
                 message.setId(Id);
+                message.setNome(LOGIN);
                 message.setType(Message.MessageType.Message);
                 message.setMessage(txtMsg.getText().toString());
+                message.setData(Calendar.getInstance().getTime());
 
                 try
                 {
                     out.writeObject(message);
+                    msgOperations.addMensagem(message);
                 }
                 catch (IOException e)
                 {
@@ -131,9 +136,11 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            Input output = new Input(in);
-            Thread thread = new Thread(output);
+            Input input = new Input(in);
+            Thread thread = new Thread(input);
             thread.start();
+
+            Sincronizar();
         }
     }
 
@@ -171,6 +178,22 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private void Sincronizar(){
+        Message message = msgOperations.GetLast();
+        message.setId(Id);
+        message.setNome(LOGIN);
+        message.setType(Message.MessageType.Sync);
+        message.setMessage(txtMsg.getText().toString());
+        try
+        {
+            out.writeObject(message);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 

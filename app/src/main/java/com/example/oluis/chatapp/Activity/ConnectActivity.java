@@ -13,6 +13,7 @@ public class ConnectActivity extends AppCompatActivity {
 
     private EditText txtIp;
     private EditText txtPort;
+    private EditText txtLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +26,13 @@ public class ConnectActivity extends AppCompatActivity {
 
         txtIp = (EditText) findViewById(R.id.txtIp);
         txtPort = (EditText) findViewById(R.id.txtPort);
+        txtLogin = (EditText) findViewById(R.id.txtLogin);
 
         if((txtIp.getText().length() != 0)){
             if((txtPort.getText().length() != 0)){
                 i.putExtra("IP", txtIp.getText());
                 i.putExtra("PORT", txtPort.getText());
+                i.putExtra("LOGIN", txtLogin.getText());
 
                 startActivity(i);
                 finish();
