@@ -39,7 +39,7 @@ public class MensagemOperations {
         values.put(DbWraper.MENSAGEM_NOME, msg.getNome());
         values.put(DbWraper.MENSAGEM_CONTEUDO, msg.getMessage());
 
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(msg.getData());
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(msg.getData());
         values.put(DbWraper.MENSAGEM_DATA, timeStamp);
 
         long mensagemId = database.insert(DbWraper.MENSAGEM, null, values);
@@ -58,9 +58,10 @@ public class MensagemOperations {
     public Message GetLast(){
 
         Message checkout = new Message();
-        String queryString = "SELECT * FROM "+ DbWraper.MENSAGEM  + " ORDER BY "+ DbWraper.MENSAGEM_DATA +"  DESC LIMIT 1";
+        String queryString = "SELECT * FROM "+ DbWraper.MENSAGEM  + " ORDER BY "+ DbWraper.MENSAGEM_DATA +"  DESC";
+        String query = "SELECT * FROM " + DbWraper.MENSAGEM;
 
-        Cursor cursor = database.rawQuery(queryString, null);
+        Cursor cursor = database.rawQuery(query, null);
 
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
@@ -71,6 +72,23 @@ public class MensagemOperations {
 
         cursor.close();
         return checkout;
+    }
+
+    public List GetAll(){
+        List listCheckouts = new ArrayList<Message>();
+        Cursor cursor = database.query(DbWraper.MENSAGEM,
+                MENSAGEM_TABLE_COLUMNS, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            Message checkout = new Message();
+            checkout = parseMessage(cursor);
+            listCheckouts.add(checkout);
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        return listCheckouts;
     }
 
     private Message parseMessage(Cursor cursor){

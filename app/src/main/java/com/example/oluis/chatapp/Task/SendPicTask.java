@@ -27,18 +27,14 @@ public class SendPicTask extends AsyncTask<String, Void, Void>{
     private Context context;
     private ImageView imgView;
     private ProgressBar progress;
-    private final String ip;
-    private final int port;
-    private final String user;
-
+    private ObjectOutputStream out;
+    private String Nome;
 
     public int Id;
 
-    public SendPicTask(Context context, String ip, int port, String user){
+    public SendPicTask(Context context, ObjectOutputStream out, String Nome){
         this.context = context;
-        this.ip = ip;
-        this.port = port;
-        this.user = user;
+        this.Nome = Nome;
     }
 
     @Override
@@ -59,17 +55,14 @@ public class SendPicTask extends AsyncTask<String, Void, Void>{
             String msg = new String(FileUtils.readFromFile(file));
 
             Message message = new Message();
-            Socket socket = null;
-            socket = new Socket(ip, port);
-            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
 
             message.setId(Id);
-            message.setNome(user);
+            message.setNome(Nome);
             message.setType(Message.MessageType.Photo);
             message.setMessage(msg);
             message.setData(Calendar.getInstance().getTime());
 
-            output.writeObject(message);
+            out.writeObject(message);
 
         } catch (IOException e) {
             e.printStackTrace();

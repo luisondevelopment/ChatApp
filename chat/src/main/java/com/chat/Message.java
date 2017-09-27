@@ -8,6 +8,7 @@ public class Message implements Serializable {
 
 	private int Id;
 	private String Message;
+	private byte[] Foto;
     private String Nome;
     private Date Data;
 	private MessageType type;
@@ -54,6 +55,14 @@ public class Message implements Serializable {
 
 	public void setSync(boolean sync) {
 		IsSync = sync;
+	}
+
+	public byte[] getFoto() {
+		return Foto;
+	}
+
+	public void setFoto(byte[] foto) {
+		Foto = foto;
 	}
 
 	public static enum MessageType {

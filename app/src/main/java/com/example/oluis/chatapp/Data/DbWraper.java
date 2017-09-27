@@ -16,7 +16,7 @@ public class DbWraper extends SQLiteOpenHelper{
     public static final String MENSAGEM_CONTEUDO = "_conteudo";
 
     private static final String DATABASE_NAME = "Chat.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String DATABASE_CREATE = "create table " + MENSAGEM
             + "(" + MENSAGEM_ID + " integer primary key autoincrement, "

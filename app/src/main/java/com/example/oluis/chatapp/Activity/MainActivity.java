@@ -111,10 +111,16 @@ public class MainActivity extends AppCompatActivity {
                 message.setMessage(txtMsg.getText().toString());
                 message.setData(Calendar.getInstance().getTime());
 
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        txtMsg.setText("");
+                    }
+                });
+
                 try
                 {
                     out.writeObject(message);
-                    msgOperations.addMensagem(message);
                 }
                 catch (IOException e)
                 {
@@ -124,10 +130,14 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
-    public void BuildListView(final List<Message> listMsg) {
-        final ChatAdapter produtoAdapter = new ChatAdapter(this, listMsg);
+    public void BuildListView() {
+        List<Message> listMessage = msgOperations.GetAll();
+
+        final ChatAdapter produtoAdapter = new ChatAdapter(this, listMessage);
         list = (ListView) findViewById(R.id.listChat);
         list.setAdapter(produtoAdapter);
+
+        list.setSelection(listMessage.size());
     }
 
     class Connect implements Runnable {
@@ -182,12 +192,14 @@ public class MainActivity extends AppCompatActivity {
 
                         }
 
+                        msgOperations.addMensagem(message);
+
                         listMessage.add(message);
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                BuildListView(listMessage);
+                                BuildListView();
                             }
                         });
                     }
@@ -204,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
         message.setNome(LOGIN);
         message.setType(Message.MessageType.Sync);
         message.setMessage(txtMsg.getText().toString());
+        message.setData(Calendar.getInstance().getTime());
         try
         {
             out.writeObject(message);
@@ -251,18 +264,37 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
            // Bitmap imgBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
 
-            /*********************************************/
-            //Todo:
-            //Remover daqui assim que for implementado o login
-            Bundle b = getIntent().getExtras();
-            IP = b.get("IP").toString();
-            PORT = Integer.parseInt(b.get("PORT").toString());
-            /*********************************************/
-            SendPicTask sendPicTask = new SendPicTask(this, IP, PORT, LOGIN);
-            sendPicTask.execute(mCurrentPhotoPath);
+            File file = new File(mCurrentPhotoPath);
+            final String content;
+            try {
+                Message message = new Message();
+
+                message.setId(Id);
+                message.setNome(LOGIN);
+                message.setType(Message.MessageType.Photo);
+                message.setFoto(FileUtils.readFromFile(file));
+                message.setData(Calendar.getInstance().getTime());
+
+                final Message msg = message;
+
+                new Thread() {
+                    public void run() {
+                        try
+                        {
+                            out.writeObject(msg);
+                        }
+                        catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
-
 }
 
 
