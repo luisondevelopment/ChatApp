@@ -1,9 +1,11 @@
 package com.example.oluis.chatapp.Adapter;
 
 import android.app.Activity;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chat.Message;
@@ -47,7 +49,15 @@ public class ChatAdapter extends BaseAdapter{
 
         TextView txtMsgUser = (TextView) view.findViewById(R.id.txtMensagemUser);
 
-        txtMsgUser.setText(msg.getMessage());
+        ImageView imgMsgUser = (ImageView) view.findViewById(R.id.imgMensagemUser);
+
+        if(msg.getType() == Message.MessageType.Photo){
+            byte[] byteMsg = msg.getMessage().getBytes();
+            imgMsgUser.setImageBitmap(BitmapFactory.decodeByteArray(byteMsg, 0, byteMsg.length));
+        }
+        else{
+            txtMsgUser.setText(msg.getMessage());
+        }
 
         return view;
     }
