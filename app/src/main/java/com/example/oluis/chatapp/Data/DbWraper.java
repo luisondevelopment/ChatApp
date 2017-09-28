@@ -14,15 +14,17 @@ public class DbWraper extends SQLiteOpenHelper{
     public static final String MENSAGEM_NOME = "_nome";
     public static final String MENSAGEM_DATA = "_data";
     public static final String MENSAGEM_CONTEUDO = "_conteudo";
+    public static final String MENSAGEM_TIPOMENSAGEM = "_tipoMensagem";
 
     private static final String DATABASE_NAME = "Chat.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 7;
 
     private static final String DATABASE_CREATE = "create table " + MENSAGEM
             + "(" + MENSAGEM_ID + " integer primary key autoincrement, "
             + MENSAGEM_NOME + " text not null, "
             + MENSAGEM_DATA + " date not null, "
-            + MENSAGEM_CONTEUDO + " text not null)";
+            + MENSAGEM_CONTEUDO + " text not null, "
+            + MENSAGEM_TIPOMENSAGEM + " int not null)";
 
     public DbWraper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

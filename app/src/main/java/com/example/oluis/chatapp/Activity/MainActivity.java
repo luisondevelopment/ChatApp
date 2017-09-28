@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     public void BuildListView() {
         List<Message> listMessage = msgOperations.GetAll();
 
-        final ChatAdapter produtoAdapter = new ChatAdapter(this, listMessage);
+        final ChatAdapter produtoAdapter = new ChatAdapter(this, listMessage, LOGIN);
         list = (ListView) findViewById(R.id.listChat);
         list.setAdapter(produtoAdapter);
 
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
         public void run() {
             try {
-                socket = new Socket("192.168.100.11", 4445);
+                socket = new Socket("10.0.2.2", 4445);
 
                 in = new ObjectInputStream(socket.getInputStream());
                 out = new ObjectOutputStream(socket.getOutputStream());
@@ -189,10 +189,13 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if(message.getType() == Message.MessageType.Photo){
-
+                            byte[] temp = null;
+                            message.setFoto(temp);
+                            msgOperations.addMensagem(message);
                         }
-
-                        msgOperations.addMensagem(message);
+                        else{
+                            msgOperations.addMensagem(message);
+                        }
 
                         listMessage.add(message);
 
@@ -274,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
                 message.setType(Message.MessageType.Photo);
                 message.setFoto(FileUtils.readFromFile(file));
                 message.setData(Calendar.getInstance().getTime());
+                message.setMessage(mCurrentPhotoPath);
 
                 final Message msg = message;
 

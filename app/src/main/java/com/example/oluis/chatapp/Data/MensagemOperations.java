@@ -19,7 +19,8 @@ public class MensagemOperations {
     private String[] MENSAGEM_TABLE_COLUMNS = { DbWraper.MENSAGEM_ID,
                                                 DbWraper.MENSAGEM_NOME,
                                                 DbWraper.MENSAGEM_DATA,
-                                                DbWraper.MENSAGEM_CONTEUDO};
+                                                DbWraper.MENSAGEM_CONTEUDO,
+                                                DbWraper.MENSAGEM_TIPOMENSAGEM};
     private SQLiteDatabase database;
 
     public MensagemOperations(Context context){
@@ -42,6 +43,7 @@ public class MensagemOperations {
         ContentValues values = new ContentValues();
         values.put(DbWraper.MENSAGEM_NOME, msg.getNome());
         values.put(DbWraper.MENSAGEM_CONTEUDO, msg.getMessage());
+        values.put(DbWraper.MENSAGEM_TIPOMENSAGEM, msg.getType().toString());
 
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(msg.getData());
         values.put(DbWraper.MENSAGEM_DATA, timeStamp);
@@ -96,6 +98,7 @@ public class MensagemOperations {
     }
 
     private Message parseMessage(Cursor cursor){
+        String type;
         Message msg = new Message();
         msg.setId(cursor.getInt(0));
         msg.setNome(cursor.getString(1));
@@ -111,6 +114,18 @@ public class MensagemOperations {
         msg.setData(d);
 
         msg.setMessage(cursor.getString(3));
+
+        type = cursor.getString(4);
+
+        if(type.equals(Message.MessageType.Message.toString())){
+            msg.setType(Message.MessageType.Message);
+        }else if(type.equals(Message.MessageType.Photo.toString())) {
+            msg.setType(Message.MessageType.Photo);
+        }else if(type.equals(Message.MessageType.GeneratedId.toString())){
+            msg.setType(Message.MessageType.GeneratedId);
+        }else if(type.equals(Message.MessageType.Sync.toString())){
+            msg.setType(Message.MessageType.Sync);
+        }
 
         return msg;
     }
