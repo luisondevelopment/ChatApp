@@ -35,6 +35,10 @@ public class MensagemOperations {
     }
 
     public Message addMensagem(Message msg){
+
+        if(msg.getMessage() == null)
+            msg.setMessage("");
+
         ContentValues values = new ContentValues();
         values.put(DbWraper.MENSAGEM_NOME, msg.getNome());
         values.put(DbWraper.MENSAGEM_CONTEUDO, msg.getMessage());
@@ -57,7 +61,7 @@ public class MensagemOperations {
 
     public Message GetLast(){
 
-        Message checkout = new Message();
+        Message message = new Message();
         String queryString = "SELECT * FROM "+ DbWraper.MENSAGEM  + " ORDER BY "+ DbWraper.MENSAGEM_DATA +"  DESC";
         String query = "SELECT * FROM " + DbWraper.MENSAGEM;
 
@@ -65,30 +69,30 @@ public class MensagemOperations {
 
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
-            checkout = new Message();
-            checkout = parseMessage(cursor);
+            message = new Message();
+            message = parseMessage(cursor);
             cursor.moveToNext();
         }
 
         cursor.close();
-        return checkout;
+        return message;
     }
 
     public List GetAll(){
-        List listCheckouts = new ArrayList<Message>();
+        List listMsgs = new ArrayList<Message>();
         Cursor cursor = database.query(DbWraper.MENSAGEM,
                 MENSAGEM_TABLE_COLUMNS, null, null, null, null, null);
 
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
-            Message checkout = new Message();
-            checkout = parseMessage(cursor);
-            listCheckouts.add(checkout);
+            Message message = new Message();
+            message = parseMessage(cursor);
+            listMsgs.add(message);
             cursor.moveToNext();
         }
 
         cursor.close();
-        return listCheckouts;
+        return listMsgs;
     }
 
     private Message parseMessage(Cursor cursor){

@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
         public void run() {
             try {
-                socket = new Socket("10.0.2.2", 4445);
+                socket = new Socket("192.168.100.11", 4445);
 
                 in = new ObjectInputStream(socket.getInputStream());
                 out = new ObjectOutputStream(socket.getOutputStream());
