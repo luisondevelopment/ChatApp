@@ -4,17 +4,23 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -75,15 +81,14 @@ public class MainActivity extends AppCompatActivity {
 
         LOGIN = b.get("LOGIN").toString();
 
-        /*if (b == null) {
+        if (b == null) {
             Intent i = new Intent(this, ConnectActivity.class);
             startActivity(i);
         } else {
             IP = b.get("IP").toString();
             PORT = Integer.parseInt(b.get("PORT").toString());
+        }
 
-
-        }*/
         listMessage = new ArrayList<Message>();
 
         msgOperations = new MensagemOperations(this);
@@ -98,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
         Connect connect = new Connect(in);
         Thread thread = new Thread(connect);
         thread.start();
+
+
     }
 
     public void btnSendOnClick(View v) {
@@ -131,13 +138,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void BuildListView() {
-        List<Message> listMessage = msgOperations.GetAll();
+        final List<Message> listMessage = msgOperations.GetAll();
 
         final ChatAdapter produtoAdapter = new ChatAdapter(this, listMessage, LOGIN);
         list = (ListView) findViewById(R.id.listChat);
         list.setAdapter(produtoAdapter);
 
         list.setSelection(listMessage.size());
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                Message selectedMessage = listMessage.get(position);
+                if(selectedMessage.getType() == Message.MessageType.Photo) {
+                    //Toast.makeText(MainActivity.this, "foto selecionada:" + selectedMessage.getMessage(), Toast.LENGTH_LONG).show();
+
+                    FragmentManager fm = getSupportFragmentManager();
+                    MyDialogFragment dialog = new MyDialogFragment();
+
+                    Bundle args = new Bundle();
+                    args.putString("imageUri", selectedMessage.getMessage());
+                    dialog.setArguments(args);
+                    dialog.show(fm, "teste");
+                }
+            }
+        });
     }
 
     class Connect implements Runnable {
@@ -151,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
         public void run() {
             try {
-                socket = new Socket("10.0.2.2", 4445);
+                socket = new Socket(IP, PORT);
 
                 in = new ObjectInputStream(socket.getInputStream());
                 out = new ObjectOutputStream(socket.getOutputStream());
@@ -190,13 +215,21 @@ public class MainActivity extends AppCompatActivity {
 
                         if(message.getType() == Message.MessageType.Photo){
                             byte[] temp = null;
-                            message.setFoto(temp);
-                            msgOperations.addMensagem(message);
+                            byte[] photo = message.getFoto();
+
+                            if(!message.getNome().equals(LOGIN)){
+                                File photoReceived =  FileUtils.createFile(MainActivity.this, ".jpg");
+                                FileUtils.writeToFile(photoReceived, photo);
+                                message.setMessage(photoReceived.getAbsolutePath().toString());
+                                msgOperations.addMensagem(message);
+                            }else{
+                                message.setFoto(temp);
+                                msgOperations.addMensagem(message);
+                            }
                         }
                         else{
                             msgOperations.addMensagem(message);
                         }
-
                         listMessage.add(message);
 
                         runOnUiThread(new Runnable() {
@@ -297,6 +330,22 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static class MyDialogFragment extends DialogFragment {
+
+        String imageAddress;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_sample_dialog, container, false);
+            getDialog().setTitle("Simple Dialog");
+
+            imageAddress = getArguments().getString("imageUri");
+            ImageView image = (ImageView)rootView.findViewById(R.id.image);
+            image.setImageBitmap(BitmapFactory.decodeFile(imageAddress));
+            return rootView;
         }
     }
 }

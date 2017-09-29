@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chat.Message;
+import com.example.oluis.chatapp.Activity.MainActivity;
 import com.example.oluis.chatapp.R;
 
 import org.w3c.dom.Text;
@@ -41,7 +42,9 @@ public class ChatAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
+
         return messageList.get(position);
+
     }
 
     @Override
@@ -65,11 +68,13 @@ public class ChatAdapter extends BaseAdapter {
             Bitmap img = BitmapFactory.decodeFile(msg.getMessage());
 
             if(msg.getNome().equals(nome)){
+                imgSent.setVisibility(View.VISIBLE);
                 imgSent.setImageBitmap(img);
                 imgReceived.setVisibility(View.INVISIBLE);
                 txtMsgReceived.setVisibility(View.INVISIBLE);
                 txtMsgSent.setVisibility(View.INVISIBLE);
             }else{
+                imgReceived.setVisibility(View.VISIBLE);
                 imgReceived.setImageBitmap(img);
                 imgSent.setVisibility(View.INVISIBLE);
                 txtMsgReceived.setVisibility(View.INVISIBLE);
@@ -80,14 +85,19 @@ public class ChatAdapter extends BaseAdapter {
             if(msg.getNome().equals(nome)) {
                 txtMsgSent.setText(msg.getMessage());
                 txtMsgReceived.setVisibility(View.INVISIBLE);
+                imgSent.setVisibility(View.GONE);
+                imgReceived.setVisibility(View.GONE);
             }
             else {
                 txtMsgReceived.setText(msg.getNome() + ": \n" + msg.getMessage());
                 txtMsgSent.setVisibility(View.INVISIBLE);
+                imgSent.setVisibility(View.GONE);
+                imgReceived.setVisibility(View.GONE);
             }
         }
         return view;
     }
+
 
 
 }

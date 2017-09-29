@@ -12,23 +12,28 @@
 
         <ImageView
             android:id="@+id/imgReceived"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="false"
+            android:layout_marginBottom="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_centerHorizontal="false"
-            android:visibility="visible"/>
+            android:layout_marginTop="20dp"
+            android:clickable="false"
+            android:cropToPadding="false"
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/imgSent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="false"
+            android:layout_marginBottom="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_centerHorizontal="false"
-            android:layout_alignParentRight="true"
-            android:visibility="visible"/>
+            android:layout_marginTop="20dp"
+            android:visibility="gone" />
 
         <ProgressBar
             android:id="@+id/progressImg"
@@ -38,6 +43,7 @@
             android:layout_alignLeft="@+id/imgReceived"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/imgReceived"
+            android:layout_margin="20dp"
             android:visibility="invisible"
             tools:visibility="invisible" />
 
@@ -46,22 +52,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="false"
+            android:layout_marginBottom="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="30dp"
-            android:background="#caf7dd"
-            />
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_corner2"/>
 
         <TextView
             android:id="@+id/txtMessageSent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:gravity="right"
+            android:layout_marginBottom="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/rounded_corner"/>
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_corner"
+            android:gravity="right" />
 
     </RelativeLayout>
 </LinearLayout>
